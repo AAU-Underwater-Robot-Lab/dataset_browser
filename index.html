@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dataset Catalog</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <h1>Dataset Catalog</h1>
+
+  <div id="controls">
+    <input type="text" id="searchBox" placeholder="Search datasets...">
+    <button id="selectAll">Select All</button>
+    <button id="deselectAll">Deselect All</button>
+    <button id="exportCSV">Export CSV</button>
+    <button id="exportBib">Export BibTeX</button>
+    <button id="exportLaTeX">Export LaTeX</button>
+  </div>
+
+  <ul id="datasetList"></ul>
+
+  <script src="js/search.js"></script>
+  <script src="js/export.js"></script>
+</body>
+</html>

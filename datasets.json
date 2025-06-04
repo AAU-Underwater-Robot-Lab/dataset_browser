@@ -1,0 +1,25 @@
+[
+  {
+    "id": "DS001",
+    "title": "Clear Pool Scenes",
+    "description": "High-res synthetic images, no turbidity.",
+    "tags": ["synthetic", "benchmark"],
+    "flags": ["rgb", "fls"],
+    "num_files": 124,
+    "links": {
+      "data": "https://example.com/clear-pool.zip",
+      "info": "https://example.com/clear-pool.html"
+    }
+  },
+  {
+    "id": "DS002",
+    "title": "Moderate Turbidity Set",
+    "description": "Blender-generated images simulating medium turbidity.",
+    "tags": ["synthetic", "turbidity"],
+    "flags": ["fls"],
+    "num_files": 450,
+    "links": {
+      "data": "https://example.com/moderate-turbidity.zip"
+    }
+  }
+]
