@@ -15,8 +15,10 @@ document.getElementById('exportCSV').addEventListener('click', () => {
     [e.id, e.title, e.description, e.num_files, e.tags.join(';'), e.flags.join(';')]
     .map(v => `"${v}"`).join(',')
   );
-  const header = ['id','title','description','num_files','tags','flags'].join(',') + '\n';
-  download(header + rows.join('\n'), 'selected.csv', 'text/csv');
+  const header = ['id','title','description','num_files','tags','flags'].join(',') + '
+';
+  download(header + rows.join('
+'), 'selected.csv', 'text/csv');
 });
 
 document.getElementById('exportBib').addEventListener('click', () => {
@@ -25,7 +27,9 @@ document.getElementById('exportBib').addEventListener('click', () => {
   title = {${e.title}},
   note = {${e.description}},
   howpublished = {\url{${e.links?.data || ''}}}
-}`).join('\n\n');
+}`).join('
+
+');
   download(entries, 'selected.bib', 'text/plain');
 });
 
@@ -37,7 +41,8 @@ document.getElementById('exportLaTeX').addEventListener('click', () => {
 \toprule
 Title & Description \\
 \midrule
-${rows.join('\n')}
+${rows.join('
+')}
 \bottomrule
 \end{tabular}`;
   download(content, 'selected.tex', 'text/plain');
