@@ -1,24 +1,32 @@
 let allDatasets = [];
 const selectedIDs = new Set();
 
-async function loadDatasets(){
+async function loadDatasets() {
   const res = await fetch('datasets.json');
   allDatasets = await res.json();
-  renderDatasetList(allDatasets);
+  renderDatasetTable(allDatasets);
 }
 
-function renderDatasetList(list){
-  const ul = document.getElementById('datasetList');
-  ul.innerHTML = '';
+function renderDatasetTable(list) {
+  const tbody = document.getElementById('datasetTableBody');
+  tbody.innerHTML = '';
   list.forEach(ds => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <label>
-        <input type="checkbox" class="select-entry" data-id="${ds.id}">
-        <strong>${ds.title}</strong> (${ds.num_files}) – ${ds.description}
-      </label>`;
-    ul.appendChild(li);
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="checkbox" class="select-entry" data-id="${ds.id}"></td>
+      <td><strong>${ds.title}</strong></td>
+      <td>${ds.description}</td>
+      <td>${ds.tags.join(', ')}</td>
+      <td>${ds.flags.join(', ')}</td>
+      <td>${ds.num_files}</td>
+      <td>
+        ${ds.links?.data ? `<a href="${ds.links.data}" target="_blank">Data</a>` : ''}
+        ${ds.links?.info ? ` | <a href="${ds.links.info}" target="_blank">Info</a>` : ''}
+      </td>
+    `;
+    tbody.appendChild(row);
   });
+
   document.querySelectorAll('.select-entry').forEach(cb => {
     cb.addEventListener('change', () => {
       cb.checked ? selectedIDs.add(cb.dataset.id) : selectedIDs.delete(cb.dataset.id);
@@ -26,14 +34,14 @@ function renderDatasetList(list){
   });
 }
 
-function filterDatasets(){
+function filterDatasets() {
   const q = document.getElementById('searchBox').value.toLowerCase();
   const filtered = allDatasets.filter(ds =>
     ds.title.toLowerCase().includes(q) ||
     ds.description.toLowerCase().includes(q) ||
     ds.tags.join(' ').toLowerCase().includes(q)
   );
-  renderDatasetList(filtered);
+  renderDatasetTable(filtered);
 }
 
 document.getElementById('searchBox').addEventListener('input', filterDatasets);
