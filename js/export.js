@@ -24,8 +24,8 @@ document.getElementById('exportBib').addEventListener('click', () => {
 @misc{${e.id},
   title = {${e.title}},
   note = {${e.description}},
-  howpublished = {\url{${e.links.data || ''}}}
-}`).join('\n');
+  howpublished = {\url{${e.links?.data || ''}}}
+}`).join('\n\n');
   download(entries, 'selected.bib', 'text/plain');
 });
 
@@ -33,12 +33,12 @@ document.getElementById('exportLaTeX').addEventListener('click', () => {
   const rows = getSelected().map(e =>
     `${e.title.replace(/_/g,'\\_')} & ${e.description.replace(/_/g,'\\_')} \\`
   );
-  const content = `\\begin{tabular}{ll}
-\\toprule
+  const content = `\begin{tabular}{ll}
+\toprule
 Title & Description \\
-\\midrule
+\midrule
 ${rows.join('\n')}
-\\bottomrule
-\\end{tabular}`;
+\bottomrule
+\end{tabular}`;
   download(content, 'selected.tex', 'text/plain');
 });
