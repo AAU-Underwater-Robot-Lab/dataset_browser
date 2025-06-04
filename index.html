@@ -4,8 +4,16 @@
   <meta charset="UTF-8">
   <title>Dataset Catalog</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    #logo { height: 60px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
+    th { background: #f0f0f0; }
+  </style>
 </head>
 <body>
+  <img src="assets/aau_logo.png" alt="AAU Logo" id="logo">
+
   <h1>Dataset Catalog</h1>
 
   <div id="controls">
@@ -17,7 +25,20 @@
     <button id="exportLaTeX">Export LaTeX</button>
   </div>
 
-  <ul id="datasetList"></ul>
+  <table>
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Tags</th>
+        <th>Flags</th>
+        <th>Files</th>
+        <th>Links</th>
+      </tr>
+    </thead>
+    <tbody id="datasetTableBody"></tbody>
+  </table>
 
   <script src="js/search.js"></script>
   <script src="js/export.js"></script>
