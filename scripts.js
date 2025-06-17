@@ -13,16 +13,16 @@ window.addEventListener('load', async () => {
 
 function safeParseNote(raw) {
   try {
-    // Handles BibTeX string that contains escaped JSON as a literal string
-    // Example: note = "{\\"tags\\": [\\"sonar\\"]}"
     const cleaned = raw.trim();
-    if (cleaned.startsWith('"') || cleaned.startsWith("'")) {
-      // It's a quoted string, remove outer quotes and unescape
-      const unquoted = cleaned.slice(1, -1);
-      return JSON.parse(unquoted.replace(/\\"/g, '"'));
-    } else {
+
+    // If already valid JSON (starts with { or [), parse directly
+    if (cleaned.startsWith("{") || cleaned.startsWith("[")) {
       return JSON.parse(cleaned);
     }
+
+    // If it looks like a truncated JSON without leading brace, add one
+    const autoWrapped = "{" + cleaned.replace(/\\"/g, '"') + "}";
+    return JSON.parse(autoWrapped);
   } catch (e) {
     console.warn("Note JSON parse failed:", e, raw);
     return {};
