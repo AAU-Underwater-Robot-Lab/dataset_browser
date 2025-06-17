@@ -13,17 +13,11 @@ function safeParseNote(raw) {
   try {
     let cleaned = raw.trim();
 
-    // Remove any leading \" and trailing quote
-    if (cleaned.startsWith('\\\\\"') || cleaned.startsWith('\\"') || cleaned.startsWith('\"')) {
-      cleaned = cleaned.replace(/^\\\\?\\"/, '');
-    }
-
-    // Remove trailing quotes
-    cleaned = cleaned.replace(/\\\\?\\"$/, '').replace(/\"$/, '');
-
-    // Wrap in curly braces if not already wrapped
-    if (!cleaned.startsWith('{')) {
-      cleaned = `{${cleaned}}`;
+    // If string looks like {\"...\": ...}, then remove outer { } and unescape
+    if (cleaned.startsWith("{\\\"")) {
+      cleaned = cleaned.slice(1, -1); // Remove outer { and }
+      cleaned = cleaned.replace(/\\"/g, '"'); // Unescape quotes
+      cleaned = `{${cleaned}}`; // Rewrap with normal JSON braces
     }
 
     return JSON.parse(cleaned);
@@ -32,7 +26,6 @@ function safeParseNote(raw) {
     return {};
   }
 }
-
 
 function updateFilters() {
   const tagSet = new Set();
