@@ -12,15 +12,9 @@ window.addEventListener("load", async () => {
 function safeParseNote(raw) {
   try {
     let cleaned = raw.trim();
-
-    // If string looks like {\"...\": ...}, then remove outer { } and unescape
-    if (cleaned.startsWith("{\\\"")) {
-      cleaned = cleaned.slice(1, -1); // Remove outer { and }
-      cleaned = cleaned.replace(/\\"/g, '"'); // Unescape quotes
-      cleaned = `{${cleaned}}`; // Rewrap with normal JSON braces
-    }
-
-    return JSON.parse(cleaned);
+    cleaned = cleaned.replace(/[\\\\]/g, "");  // Remove all backslashes
+    cleaned = cleaned.replace(/^\\{+|\\}+$/g, "");  // Remove all leading/trailing curly braces
+    return JSON.parse('{' + cleaned + '}');
   } catch (e) {
     console.warn("Note JSON parse failed:", e, raw);
     return {};
