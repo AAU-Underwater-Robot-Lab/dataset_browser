@@ -13,28 +13,26 @@ function safeParseNote(raw) {
   try {
     let cleaned = raw.trim();
 
-    // If it already looks like JSON, just parse it
-    if (cleaned.startsWith("{") && cleaned.endsWith("}")) {
-      return JSON.parse(cleaned);
+    // Remove any leading \" and trailing quote
+    if (cleaned.startsWith('\\\\\"') || cleaned.startsWith('\\"') || cleaned.startsWith('\"')) {
+      cleaned = cleaned.replace(/^\\\\?\\"/, '');
     }
 
-    // Handle cases where the string starts with \" instead of {
-    if (cleaned.startsWith('\\"')) {
-      cleaned = cleaned.slice(2);
+    // Remove trailing quotes
+    cleaned = cleaned.replace(/\\\\?\\"$/, '').replace(/\"$/, '');
+
+    // Wrap in curly braces if not already wrapped
+    if (!cleaned.startsWith('{')) {
+      cleaned = `{${cleaned}}`;
     }
 
-    // Remove trailing unescaped quote if present
-    if (cleaned.endsWith('"') || cleaned.endsWith('\\"')) {
-      cleaned = cleaned.replace(/\\?"$/, "");
-    }
-
-    // Now wrap it in braces
-    return JSON.parse(`{${cleaned}}`);
+    return JSON.parse(cleaned);
   } catch (e) {
     console.warn("Note JSON parse failed:", e, raw);
     return {};
   }
 }
+
 
 function updateFilters() {
   const tagSet = new Set();
