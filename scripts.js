@@ -2,7 +2,7 @@ let entries = [];
 
 window.addEventListener('load', async () => {
   try {
-    const response = await fetch('datasets.bib');
+    const response = await fetch('dataset_browser/datasets.bib');
     const text = await response.text();
     entries = bibtexParse.toJSON(text);
     renderTable(entries);
