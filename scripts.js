@@ -7,7 +7,7 @@ window.addEventListener('load', async () => {
     entries = bibtexParse.toJSON(text);
     renderTable(entries);
   } catch (error) {
-    console.error('Failed to load BibTeX:', error);
+    document.getElementById('status').innerText = 'Failed to load or parse datasets.bib'; console.error('Failed to load BibTeX:', error);
   }
 });
 
