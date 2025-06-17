@@ -11,25 +11,36 @@ window.addEventListener('load', async () => {
   }
 });
 
+function safeParseNote(raw) {
+  let jsonPart = raw.trim();
+  // If wrapped in braces, remove them
+  if (jsonPart.startsWith("{") && jsonPart.endsWith("}")) {
+    jsonPart = jsonPart.slice(1, -1);
+  }
+  // Try to parse; otherwise return empty object
+  try {
+    return JSON.parse(jsonPart);
+  } catch(e) {
+    console.warn("Note JSON parse failed:", e, raw);
+    return {};
+  }
+}
 function renderTable(entries) {
-  const tbody = document.querySelector('#datasetTable tbody');
-  tbody.innerHTML = '';
+  const tbody = document.querySelector("#datasetTable tbody");
+  tbody.innerHTML = "";
   entries.forEach(e => {
-    let noteData = {};
-    try {
-      noteData = JSON.parse(e.note);
-    } catch {}
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${e.citationKey}</td>
+    const noteData = safeParseNote(e.note || "");
+    const link = e.url || e.howpublished || "";
+    const row = `<tr>
+      <td>${e.id}</td>
       <td>${e.title}</td>
       <td>${e.year}</td>
-      <td>${(noteData.tags || []).join(', ')}</td>
-      <td>${(noteData.flags || []).join(', ')}</td>
-      <td>${noteData.num_files || ''}</td>
-      <td><a href="${e.howpublished?.match(/\{\\url\{(.+?)\}\}/)?.[1] || '#'}" target="_blank">Link</a></td>
-    `;
-    tbody.appendChild(row);
+      <td>${(noteData.tags||[]).join(", ")}</td>
+      <td>${(noteData.flags||[]).join(", ")}</td>
+      <td>${noteData.num_files||""}</td>
+      <td>${link ? `<a href="${link}" target="_blank">Link</a>` : ""}</td>
+    </tr>`;
+    tbody.insertAdjacentHTML("beforeend", row);
   });
 }
 
@@ -38,7 +49,7 @@ function exportCSV() {
   entries.forEach(e => {
     let noteData = {};
     try {
-      noteData = JSON.parse(e.entryTags.note);
+      noteData = safeParseNote(e.note || "");
     } catch {}
     const link = e.entryTags.howpublished?.match(/\{\\url\{(.+?)\}\}/)?.[1] || '';
     csv += `"${e.citationKey}","${e.entryTags.title}","${e.entryTags.year}","${(noteData.tags || []).join(';')}","${(noteData.flags || []).join(';')}","${noteData.num_files || ''}","${link}"\n`;
