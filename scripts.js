@@ -12,19 +12,23 @@ window.addEventListener('load', async () => {
 });
 
 function safeParseNote(raw) {
-  let jsonPart = raw.trim();
-  // If wrapped in braces, remove them
-  if (jsonPart.startsWith("{") && jsonPart.endsWith("}")) {
-    jsonPart = jsonPart.slice(1, -1);
-  }
-  // Try to parse; otherwise return empty object
   try {
-    return JSON.parse(jsonPart);
-  } catch(e) {
+    // Handles BibTeX string that contains escaped JSON as a literal string
+    // Example: note = "{\\"tags\\": [\\"sonar\\"]}"
+    const cleaned = raw.trim();
+    if (cleaned.startsWith('"') || cleaned.startsWith("'")) {
+      // It's a quoted string, remove outer quotes and unescape
+      const unquoted = cleaned.slice(1, -1);
+      return JSON.parse(unquoted.replace(/\\"/g, '"'));
+    } else {
+      return JSON.parse(cleaned);
+    }
+  } catch (e) {
     console.warn("Note JSON parse failed:", e, raw);
     return {};
   }
 }
+
 function renderTable(entries) {
   const tbody = document.querySelector("#datasetTable tbody");
   tbody.innerHTML = "";
