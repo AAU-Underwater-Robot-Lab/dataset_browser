@@ -1,10 +1,14 @@
 let entries = [];
 
-document.getElementById('bibfile').addEventListener('change', async function(event) {
-  const file = event.target.files[0];
-  const text = await file.text();
-  entries = bibtexParse.toJSON(text);
-  renderTable(entries);
+window.addEventListener('load', async () => {
+  try {
+    const response = await fetch('datasets.bib');
+    const text = await response.text();
+    entries = bibtexParse.toJSON(text);
+    renderTable(entries);
+  } catch (error) {
+    console.error('Failed to load BibTeX:', error);
+  }
 });
 
 function renderTable(entries) {
