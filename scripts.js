@@ -17,17 +17,17 @@ function renderTable(entries) {
   entries.forEach(e => {
     let noteData = {};
     try {
-      noteData = JSON.parse(e.entryTags.note);
+      noteData = JSON.parse(e.note);
     } catch {}
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${e.citationKey}</td>
-      <td>${e.entryTags.title}</td>
-      <td>${e.entryTags.year}</td>
+      <td>${e.title}</td>
+      <td>${e.year}</td>
       <td>${(noteData.tags || []).join(', ')}</td>
       <td>${(noteData.flags || []).join(', ')}</td>
       <td>${noteData.num_files || ''}</td>
-      <td><a href="${e.entryTags.howpublished?.match(/\{\\url\{(.+?)\}\}/)?.[1] || '#'}" target="_blank">Link</a></td>
+      <td><a href="${e.howpublished?.match(/\{\\url\{(.+?)\}\}/)?.[1] || '#'}" target="_blank">Link</a></td>
     `;
     tbody.appendChild(row);
   });
