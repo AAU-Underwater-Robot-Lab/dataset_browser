@@ -4,7 +4,7 @@ window.addEventListener('load', async () => {
   try {
     const response = await fetch('datasets.bib');
     const text = await response.text();
-    entries = bibtexParse.toJSON(text);
+    entries = BibtexParser.parseToJSON(text);
     renderTable(entries);
   } catch (error) {
     document.getElementById('status').innerText = error.message; console.error('Failed to load BibTeX:', error);
